@@ -72,7 +72,7 @@ To get data across all possible markets, use the same endpoint but omit the `mar
 }
 ```
 
-Please note: If any field is unavailable due to a lack of trade history or a lack of 24hr data, the field will be set to `'N/A'`
+Please note: If any field is unavailable due to a lack of trade history or a lack of 24hr data, the field will be set to `'N/A'`. `percentChange`, `baseVolume`, and `quoteVolume` will never be `'N/A'` but may be 0.
 
 ### Errors
 
