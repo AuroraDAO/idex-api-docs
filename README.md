@@ -8,9 +8,11 @@ The HTTP API is available via https://api.idex.market
 
 The name of the method call shall be the path of the URL, i.e. https://api.idex.market/returnTicker to use the returnTicker endpoint
 
-All HTTP endpoints in the public API use POST. Message payloads, if they are included, must be in JSON format. The API will likewise return JSON. The public HTTP API currently contains one method
+All HTTP endpoints in the public API use POST. Message payloads, if they are included, must be in JSON format. The API will likewise return JSON. The public HTTP API currently contains one method.
 
 ### returnTicker
+
+Designed to behave similar to the API call of the same name provided by the Poloniex HTTP API, with the addition of highs and lows. Returns all necessary 24 hr data.
 
 Possible JSON encoded parameters:
 
@@ -68,6 +70,18 @@ To get data across all possible markets, use the same endpoint but omit the `mar
      quoteVolume: '9765.891979953083752189' }
   // all possible markets follow ...
 }
+```
+
+Please note: If any field is unavailable due to a lack of trade history or a lack of 24hr data, the field will be set to `'N/A'`
+
+### Errors
+
+If an error is returned from the API, it will be in the form of a simple object containing an `error` property whose value is the error message.
+
+Example:
+
+```js
+{ error: 'Market ETH_BTC not found' }
 ```
 
 ## Further work
