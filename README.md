@@ -508,6 +508,101 @@ Example:
 { error: 'Market ETH_BTC not found' }
 ```
 
+## WebSocket API
+
+The IDEX API offers a simple mechanism to subscribe to markets to receive push updates from the server about orderbook changes and new trades. To begin, open a WebSocket connection to wss://api.idex.market
+
+All messages sent to the WebSocket server must be encoded as JSON documents. Messages sent to the server can optionally include an `id` property in the JSON payload. When the server responds it will send a message with the same `id` property if it is used.
+
+There are two messages you might want to send to the WebSocket server, a subscribe or an unsubscribe message. A subscription might be in the following form:
+
+```js
+{ subscribe: 'ETH_DVIP' }
+```
+The response from the server will be of the following structure:
+```js
+{ message: { success: 'Subscribed to ETH_DVIP' } }
+```
+
+Unsubscribing is similar:
+```js
+{ unsubscribe: 'ETH_DVIP' }
+```
+
+All messages sent from the WebSocket server will include a `message` property with the response payload. If it is a message sent as a result of a subscription, it will also contain a `topic` property with the name of the channel you are subscribed to. There are four possible payloads contained in the `message` property as a result of a subscription to a market. All payloads will have a `type` property which can be `orderBookRemove`, `orderBookAdd`, `orderBookModify`, and `newTrade` The `data` property in the `message` body will contain the event data.
+
+Example push messages are given below:
+
+```js
+{ topic: 'ETH_DVIP',
+  message:
+   { type: 'orderBookAdd',
+     data:
+      { orderNumber: 2067,
+        orderHash: '0xd9a438e69fbefaf63c327fb8a4dcafd9b1f0faaba428e16013a15328f08c02b2',
+        price: '10',
+        amount: '1',
+        total: '10',
+        type: 'sell',
+        params:
+         { tokenBuy: '0x0000000000000000000000000000000000000000',
+           buyPrecision: 18,
+           amountBuy: '10000000000000000000',
+           tokenSell: '0xadc46ff5434910bd17b24ffb429e585223287d7f',
+           sellPrecision: 2,
+           amountSell: '100',
+           expires: 190000,
+           nonce: 2831,
+           user: '0x034767f3c519f361c5ecf46ebfc08981c629d381' } } } }
+
+{ topic: 'ETH_DVIP',
+  message:
+   { type: 'orderBookRemove',
+     data:
+      { orderHash: '0xd9a438e69fbefaf63c327fb8a4dcafd9b1f0faaba428e16013a15328f08c02b2' } } }
+
+{ topic: 'ETH_DVIP',
+  message:
+   { type: 'orderBookModify',
+     data:
+      { orderNumber: 2066,
+        orderHash: '0x5b112c1c7089312cd92f5a701b7a4490ae2bde7054f6fd8e5790934cefd49dd1',
+        price: '9',
+        amount: '0.5',
+        total: '4.5',
+        type: 'sell',
+        params:
+         { tokenBuy: '0x0000000000000000000000000000000000000000',
+           buyPrecision: 18,
+           amountBuy: '9000000000000000000',
+           amountBuyRemaining: '4500000000000000000',
+           tokenSell: '0xadc46ff5434910bd17b24ffb429e585223287d7f',
+           sellPrecision: 2,
+           amountSell: '100',
+           amountSellRemaining: '50',
+           expires: 190000,
+           nonce: 2829,
+           user: '0x034767f3c519f361c5ecf46ebfc08981c629d381' } } } }
+
+{ topic: 'ETH_DVIP',
+  message:
+   { type: 'newTrade',
+     data:
+      { date: '2017-10-12 23:36:32',
+        amount: '4.5',
+        type: 'buy',
+        total: '0.5',
+        price: '9',
+        orderHash: '0x5b112c1c7089312cd92f5a701b7a4490ae2bde7054f6fd8e5790934cefd49dd1',
+        uuid: '2de5db40-afa6-11e7-9b58-b5b6bfc20bff' } } }
+
+```
+
+### WebSocket Errors
+
+An error may result if you are trying to subscribe to a channel you have already subscribed to, or unsubscribe from a channel you are not subscribed to. Simply check for an `error` property inside the `message` property of the response to properly handle errors.
+ 
+
 ## Further work
 
 * WebSocket-enabled push API using pub/sub structure
