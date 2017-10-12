@@ -498,7 +498,7 @@ To deposit into the contract, you must use the public `depositToken(address,uint
 
 To deposit ETH into the contract, simply call the `deposit()` contract function with the desired ETH value.
 
-### Errors
+## Errors
 
 If an error is returned from the API, it will be in the form of a simple object containing an `error` property whose value is the error message.
 
