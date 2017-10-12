@@ -1,6 +1,6 @@
 # idex-api-docs
 
-This repository contains instructions on how to consume the IDEX API. The IDEX API is under active development but methods documented here will not be deprecated and are safe to build upon. At this stage the only functionality ready for use is the necessary API call for coinmarketcap to read market data from the exchange.
+This repository contains instructions on how to consume the IDEX API. The IDEX API is under active development but methods documented here will not be deprecated and are safe to build upon.
 
 ## HTTP API
 
@@ -8,7 +8,7 @@ The HTTP API is available via https://api.idex.market
 
 The name of the method call shall be the path of the URL, i.e. https://api.idex.market/returnTicker to use the returnTicker endpoint
 
-All HTTP endpoints in the public API use POST. Message payloads, if they are included, must be in JSON format. The API will likewise return JSON. The public HTTP API currently contains one method.
+*All HTTP endpoints in the public API use POST*. Message payloads, if they are included, *must be in JSON format*. The API will likewise *return JSON*.
 
 ### returnTicker
 
