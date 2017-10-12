@@ -605,8 +605,7 @@ An error may result if you are trying to subscribe to a channel you have already
 
 ## Further work
 
-* WebSocket-enabled push API using pub/sub structure
-* Subscribe to individual markets, orderbook changes, ticker changes, new trade data
+* Subscribe to ticker changes
 * Set your DVIP enabled rewards multiplier or fee discount
 * Trollbox access
 * Chart data
