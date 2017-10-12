@@ -79,10 +79,108 @@ Returns the 24-hour volume for all markets, plus totals for primary currencies. 
 
 * This function takes no JSON arguments
 
-```
+```js
 { ETH_REP: { ETH: '1.3429046745', REP: '105.29046745' },
   ETH_DVIP: { ETH: '4', DVIP: '4' },
   totalETH: '5.3429046745' }
+```
+
+### returnOrderBook
+
+Returns the orderbook for a given market, or returns an object of the entire orderbook keyed by market if the market parameter is omitted.
+
+* market (string) - Market to query (omit for entire orderbook)
+
+Each market returned will have an `asks` and `bids` property containing all the sell orders and buy orders sorted by best price. Order objects will contain a `price` `amount` `total` and `orderHash` property but also a `params` property which will contain additional data about the order useful for filling or verifying it. See `trade` API call below.
+
+Sample output without market parameter:
+
+```js
+{ ETH_DVIP:
+   { asks:
+      [ { price: '2',
+          amount: '1',
+          total: '2',
+          orderHash: '0x6aee6591def621a435dd86eafa32dfc534d4baa38d715988d6f23f3e2f20a29a',
+          params:
+           { tokenBuy: '0x0000000000000000000000000000000000000000',
+             buySymbol: 'ETH',
+             buyPrecision: 18,
+             amountBuy: '2000000000000000000',
+             tokenSell: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
+             sellSymbol: 'DVIP',
+             sellPrecision: 8,
+             amountSell: '100000000',
+             expires: 190000,
+             nonce: 164,
+             user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } } ],
+     bids:
+      [ { price: '1',
+          amount: '2',
+          total: '2',
+          orderHash: '0x9ba97cfc6d8e0f9a72e9d26c377be6632f79eaf4d87ac52a2b3d715003b6536e',
+          params:
+           { tokenBuy: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
+             buySymbol: 'DVIP',
+             buyPrecision: 8,
+             amountBuy: '200000000',
+             tokenSell: '0x0000000000000000000000000000000000000000',
+             sellSymbol: 'ETH',
+             sellPrecision: 18,
+             amountSell: '2000000000000000000',
+             expires: 190000,
+             nonce: 151,
+             user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } } ] } }
+```
+
+### returnOpenOrders
+
+Returns the open orders for a given market and address
+
+* address (address string) - Address to return open orders associated with
+* market (string) - String representing the market to query (example: 'ETH_DVIP')
+
+Output is similar to the output for `returnOrderBook` except that orders are not sorted by type or price, but are rather displayed in the order of insertion. As is the case with `returnOrderBook` there is a `params` property of the response value that contains details on the order which can help with verifying its authenticity.
+
+Sample output:
+```js
+[
+  { orderNumber: 1412,
+    orderHash: '0xf1bbc500af8d411b0096ac62bc9b60e97024ad8b9ea170340ff0ecfa03536417',
+    price: '2.3',
+    amount: '1.2',
+    total: '2.76',
+    type: 'sell',
+    params:
+     { tokenBuy: '0x0000000000000000000000000000000000000000',
+       buySymbol: 'ETH',
+       buyPrecision: 18,
+       amountBuy: '2760000000000000000',
+       tokenSell: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
+       sellSymbol: 'DVIP',
+       sellPrecision: 8,
+       amountSell: '120000000',
+       expires: 190000,
+       nonce: 166,
+       user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } },
+  { orderNumber: 1413,
+    orderHash: '0x62748b55e1106f3f453d51f9b95282593ef5ce03c22f3235536cf63a1476d5e4',
+    price: '2.98',
+    amount: '1.2',
+    total: '3.576',
+    type: 'sell',
+    params:
+     { tokenBuy: '0x0000000000000000000000000000000000000000',
+       buySymbol: 'ETH',
+       buyPrecision: 18,
+       amountBuy: '3576000000000000000',
+       tokenSell: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
+       sellSymbol: 'DVIP',
+       sellPrecision: 8,
+       amountSell: '120000000',
+       expires: 190000,
+       nonce: 168,
+       user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } } ]
 ```
 
 ### returnTradeHistory
@@ -98,7 +196,7 @@ Possible properties of JSON input:
 
 Sample output:
 
-```
+```js
 { ETH_REP: 
    [ { date: '2017-10-11 21:41:15',
        amount: '0.3',
@@ -118,7 +216,7 @@ This API call takes no input..
 
 Sample output:
 
-```
+```js
 { ETH:
    { decimals: 18,
      address: '0x0000000000000000000000000000000000000000',
@@ -141,7 +239,7 @@ Returns your available balances (total deposited minus amount in open orders) in
 
 Sample output
 
-```
+```js
 { REP: '25.55306545',
   DVIP: '200000000.31012358' }
 ```
@@ -154,7 +252,7 @@ Returns your available balances along with the amount you have in open orders fo
 
 Sample output
 
-```
+```js
 { REP: { available: '25.55306545', onOrders: '0' },
   DVIP: { available: '200000000.31012358', onOrders: '0' } }
 ```
@@ -169,7 +267,7 @@ Returns your deposit and withdrawal history within a range, specified by the "st
 
 Sample output:
 
-```
+```js
 { deposits:
    [ { depositNumber: 265,
        currency: 'ETH',
@@ -197,7 +295,7 @@ Returns all trades involving a given order hash, specified by the `orderHash` pr
 
 Sample output:
 
-```
+```js
 [ { date: '2017-10-11 21:41:15',
     amount: '0.3',
     type: 'buy',
@@ -215,7 +313,7 @@ Returns the lowest nonce that you can use from the given address in one of the t
 
 Sample output:
 
-```
+```js
 { nonce: 2650 }
 ```
 
@@ -227,7 +325,7 @@ Returns the contract address used for depositing, withdrawing, and posting order
 
 Sample output:
 
-```
+```js
 { address: '0x2a0c0dbecc7e4d658f48e01e3fa353f44050c208' }
 ```
 
