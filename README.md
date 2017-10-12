@@ -16,7 +16,7 @@ Designed to behave similar to the API call of the same name provided by the Polo
 
 Possible JSON encoded parameters:
 
-* market - If included, this shall be the base market followed by an underscore, followed by the trade market. If omitted, will return an object of all markets
+* market (string) - If included, this shall be the base market followed by an underscore, followed by the trade market. If omitted, will return an object of all markets
 
 Sample code:
 
@@ -91,10 +91,10 @@ Returns the past 200 trades for a given market, or up to 10000 trades between a 
 
 Possible properties of JSON input:
 
-* market - If specified, will return an array of trade objects for the market, if omitted, will return an object of arrays of trade objects keyed by each market
-* address - If specified, return value will only include trades that involve the address as the maker or taker. Note: if specified the `type` property of the trade objects will refer to the action on the market taken relative to the user, not relative to the market. This behavior is designed to mimic the My Trades section of the IDEX appication, also to mimic the behavior of the private `returnTradeHistory` API call on Poloniex
-* start - The inclusive UNIX timestamp (seconds since epoch, not ms) marking the earliest trade that will be returned in the response, if omitted will default to 0
-* end - The inclusive UNIX timestamp marking the latest trade that will be returned in the restponse. If omitted will default to the current timestamp
+* market (string) - If specified, will return an array of trade objects for the market, if omitted, will return an object of arrays of trade objects keyed by each market
+* address (address string) - If specified, return value will only include trades that involve the address as the maker or taker. Note: if specified the `type` property of the trade objects will refer to the action on the market taken relative to the user, not relative to the market. This behavior is designed to mimic the My Trades section of the IDEX appication, also to mimic the behavior of the private `returnTradeHistory` API call on Poloniex
+* start (number) - The inclusive UNIX timestamp (seconds since epoch, not ms) marking the earliest trade that will be returned in the response, if omitted will default to 0
+* end (number) - The inclusive UNIX timestamp marking the latest trade that will be returned in the restponse. If omitted will default to the current timestamp
 
 Sample output:
 
@@ -137,7 +137,7 @@ Sample output:
 
 Returns your available balances (total deposited minus amount in open orders) indexed by token symbol.
 
-* address - Address to query balances of
+* address (address string) - Address to query balances of
 
 Sample output
 
@@ -150,7 +150,7 @@ Sample output
 
 Returns your available balances along with the amount you have in open orders for each token, indexed by token symbol.
 
-* address - Address to query balances of
+* address (address string) - Address to query balances of
 
 Sample output
 
@@ -163,9 +163,9 @@ Sample output
 
 Returns your deposit and withdrawal history within a range, specified by the "start" and "end" properties of the JSON input, both of which must be UNIX timestamps. Withdrawals can be marked as "PENDING" if they are queued for dispatch, "PROCESSING" if the transaction has been dispatched, and "COMPLETE" if the transaction has been mined.
 
-* address - Address to query deposit/withdrawal history for
-* start - Inclusive starting UNIX timestamp of returned results, defaults to 0
-* end - Inclusive ending UNIX timestamp of returned results, defaults to current timestamp
+* address (address string) - Address to query deposit/withdrawal history for
+* start (number) - Inclusive starting UNIX timestamp of returned results, defaults to 0
+* end (number) - Inclusive ending UNIX timestamp of returned results, defaults to current timestamp
 
 Sample output:
 
@@ -191,7 +191,7 @@ Sample output:
 
 Returns all trades involving a given order hash, specified by the `orderHash` property of the JSON input.
 
-* orderHash - The order hash to query for associated trades
+* orderHash (256-bit hex string) - The order hash to query for associated trades
 
 Sample output:
 
@@ -219,6 +219,8 @@ Both the `order` and `withdraw` API call require token addresses as input parame
 
 There are no floating point values in the trade functions, you must adjust your number values which represent token quantities to the level of precision that the token uses. i.e. If you are filling an order with 1 of a token that uses 8 decimal places for precision, you must supply the value 100000000. To find out what amount of precision is used by the desired token, use the `returnCurrencies` API call.
 
+If the type `uint256` is given as a parameter for any property of the JSON payloads, it is recommended you use a string to represent it.
+
 If you are having issues producing the correct signature, review the `Exchange.sol` file for the actual Solidity code which validates them.
 
 Tips for success:
@@ -232,13 +234,13 @@ Tips for success:
 
 Places a limit order on IDEX. The JSON object passed as input to this API call must include the following properties:
 
-* tokenBuy - The address of the token you will receive as a result of the trade
-* amountBuy - The amount of the token you will receive when the order is fully filled
-* tokenSell - The address of the token you will lose as a result of the trade
-* amountSell - The amount of the token you will give up when the order is fully filled
-* address - The address you are posting the order from
-* nonce - One time number associated with the limit order
-* expires - *DEPRECATED* this property has no effect on your limit order but is still REQUIRED to submit a limit order as it is one of the parameters that is hashed. It must be a numeric type
+* tokenBuy (address string) - The address of the token you will receive as a result of the trade
+* amountBuy (uint256) - The amount of the token you will receive when the order is fully filled
+* tokenSell (address string) - The address of the token you will lose as a result of the trade
+* amountSell (uint256) - The amount of the token you will give up when the order is fully filled
+* address (address string) - The address you are posting the order from
+* nonce (number) - One time number associated with the limit order
+* expires (uint256) - *DEPRECATED* this property has no effect on your limit order but is still REQUIRED to submit a limit order as it is one of the parameters that is hashed. It must be a numeric type
 * v - ...
 * r - ... 
 * s - (v r and s are the values produced by your private key signature, see above for details)
@@ -307,10 +309,10 @@ Making a trade on IDEX actually involves signing a message for each order you wi
 
 Properties of each trade object in the trade you submit:
 
-* orderHash - This is the unsalted hash of the order you are filling. See `raw` in the example code given with in the section that describes the `order` API call. The orderHash property of an order can be retrieved from the API calls which return orders, but for higher security we recommend you derive the hash yourself from the order parameters.
-* amount - This is the amount of the order you are filling, the raw value not adjusted for precision *IMPORTANT: THIS PROPERTY IS IN TERMS OF THE ORDER'S amountBuy PROPERTY. This is NOT the amount of `tokenSell` you are receiving, but the amount of `tokenBuy` you are filling the order with. Do not trade unless you fully understand this idea. The amount of the token you will receive as a result of the trade is proportional to the ratio between `amountSell` and `amountBuy`*
-* nonce - One time numeric value associated with the trade
-* address - The address you are transacting from
+* orderHash (256-bit hex string) - This is the unsalted hash of the order you are filling. See `raw` in the example code given with in the section that describes the `order` API call. The orderHash property of an order can be retrieved from the API calls which return orders, but for higher security we recommend you derive the hash yourself from the order parameters.
+* amount (uint256) - This is the amount of the order you are filling, the raw value not adjusted for precision *IMPORTANT: THIS PROPERTY IS IN TERMS OF THE ORDER'S amountBuy PROPERTY. This is NOT the amount of `tokenSell` you are receiving, but the amount of `tokenBuy` you are filling the order with. Do not trade unless you fully understand this idea. The amount of the token you will receive as a result of the trade is proportional to the ratio between `amountSell` and `amountBuy`*
+* nonce (number) - One time numeric value associated with the trade
+* address (address string) - The address you are transacting from
 * v - ...
 * r - ...
 * s - v, r, and s refer to the values produced by signing the message
@@ -330,9 +332,9 @@ NOTE: Currently, all orders being filled in a trade must be for the same tokenBu
 
 Cancels an order associated with the address. JSON input must include the following properties
 
-* orderHash - The raw hash of the order you are cancelling
-* nonce - One time number associated with the address
-* address - The address you are sending the cancel from, must own the order
+* orderHash (256-bit hex string) - The raw hash of the order you are cancelling
+* nonce (number) - One time number associated with the address
+* address (address string) - The address you are sending the cancel from, must own the order
 * v - ...
 * r - ...
 * s - v, r, and s values derived from signing the hash of the message
@@ -348,10 +350,10 @@ Salt and sign the hash as usual to prepare your payload
 
 Withdraws funds associated with the address. You cannot withdraw funds that are tied up in open orders. JSON payload must include the following properties:
 
-* address - The address you are transacting from
-* amount - The raw amount you are withdrawing, not adjusted for token precision
-* token - The address of the token you are withdrawing from, see earlier notes for ETH
-* nonce - One time numeric value associated with your address
+* address (address string) - The address you are transacting from
+* amount (uint256) - The raw amount you are withdrawing, not adjusted for token precision
+* token (address string) - The address of the token you are withdrawing from, see earlier notes for ETH
+* nonce (number) - One time numeric value associated with your address
 * v - ...
 * r - ...
 * s - v, r, and s values obtained from signing message hash
