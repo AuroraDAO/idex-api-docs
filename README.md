@@ -182,7 +182,8 @@ Sample output:
        amount: '4.5',
        timestamp: 1506552152,
        transactionHash: '0xe52e9c569fe659556d1e56d8cca2084db0b452cd889f55ec3b4e2f3af61faa57',
-       status: 'COMPLETE' } ] }```
+       status: 'COMPLETE' } ] }
+```
 
 ### returnOpenOrders
 
