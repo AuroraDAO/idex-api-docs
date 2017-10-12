@@ -185,6 +185,8 @@ Sample output:
        status: 'COMPLETE' } ] }
 ```
 
+### returnOrderBook
+
 ### returnOpenOrders
 
 ### returnOrderTrades
@@ -203,6 +205,30 @@ Sample output:
     price: '0.3',
     uuid: 'e8719a10-aecc-11e7-9535-3b8451fd4699',
     transactionHash: '0x28b945b586a5929c69337929533e04794d488c2d6e1122b7b915705d0dff8bb6' } ]
+```
+
+### returnNextNonce
+
+Returns the lowest nonce that you can use from the given address in one of the trade functions (see below)
+
+* address (address string) - The address to query for the next nonce to use
+
+Sample output:
+
+```
+{ nonce: 2650 }
+```
+
+### returnContractAddress
+
+Returns the contract address used for depositing, withdrawing, and posting orders
+
+* No JSON parameters
+
+Sample output:
+
+```
+{ address: '0x2a0c0dbecc7e4d658f48e01e3fa353f44050c208' }
 ```
 
 ## Contract-backed trade functions
