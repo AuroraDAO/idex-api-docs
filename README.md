@@ -225,7 +225,7 @@ Tips for success:
 
 1. Read this part of the documentation very carefully. If you do not understand what is written here, you risk losing your funds.
 2. Always fully understand what you are signing, if something is unclear, reach out to our team before you send your signature off.
-3. If you are handling data within a programming environment, favor arbitrary-precision arithmetic to avoid issues with precision with big numbers, especially when using JavaScript which exclusively uses 64-bit floating point values.
+3. If you are handling data within a programming environment, favor arbitrary-precision arithmetic to avoid issues with precision with big numbers, especially when using JavaScript which exclusively uses 64-bit floating point values for its `Number` type.
 4. Review relevant parts of the contract included in this repo to fully understand how the contract uses your data and associated signature.
 
 ### order
