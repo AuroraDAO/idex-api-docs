@@ -283,10 +283,6 @@ Sample output:
        status: 'COMPLETE' } ] }
 ```
 
-### returnOrderBook
-
-### returnOpenOrders
-
 ### returnOrderTrades
 
 Returns all trades involving a given order hash, specified by the `orderHash` property of the JSON input.
