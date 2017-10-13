@@ -431,7 +431,7 @@ Properties of each trade object in the trade you submit:
 
 * orderHash (256-bit hex string) - This is the unsalted hash of the order you are filling. See `raw` in the example code given with in the section that describes the `order` API call. The orderHash property of an order can be retrieved from the API calls which return orders, but for higher security we recommend you derive the hash yourself from the order parameters.
 * amount (uint256) - This is the amount of the order you are filling, the raw value not adjusted for precision *IMPORTANT: THIS PROPERTY IS IN TERMS OF THE ORDER'S amountBuy PROPERTY. This is NOT the amount of `tokenSell` you are receiving, but the amount of `tokenBuy` you are filling the order with. Do not trade unless you fully understand this idea. The amount of the token you will receive as a result of the trade is proportional to the ratio between `amountSell` and `amountBuy`*
-* nonce (number) - One time numeric value associated with the trade
+* nonce (number) - One time numeric value associated with the trade. *Note: if filling multiple orders in one trade, every nonce in the list of trades must be greater than the one in the previous item*
 * address (address string) - The address you are transacting from
 * v - ...
 * r - ...
