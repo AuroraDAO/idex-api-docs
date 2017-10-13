@@ -349,6 +349,7 @@ Tips for success:
 2. Always fully understand what you are signing, if something is unclear, reach out to our team before you send your signature off.
 3. If you are handling data within a programming environment, favor arbitrary-precision arithmetic to avoid issues with precision with big numbers, especially when using JavaScript which exclusively uses 64-bit floating point values for its `Number` type.
 4. Review relevant parts of the contract included in this repo to fully understand how the contract uses your data and associated signature.
+5. Keep track of your nonce as you make use of the signed functions to ensure that they are always increasing as every request reaches the server, mind the note given below regarding trades that fill multiple orders, when you are filling many orders in one trade make sure the nonce increases with every item in the list, as the server will process them front-to-back
 
 ### order
 
