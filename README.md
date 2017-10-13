@@ -424,6 +424,26 @@ const {
 
 The response from the server will be a new order object if successful, or have an `error` property if unsuccessful
 
+Sample output:
+```js
+{ orderNumber: 2101,
+  orderHash: '0x3fe808be7b5df3747e5534056e9ff45ead5b1fcace430d7b4092e5fcd7161e21',
+  price: '0.000129032258064516',
+  amount: '3100',
+  total: '0.4',
+  type: 'buy',
+  params: 
+   { tokenBuy: '0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098',
+     buyPrecision: 18,
+     amountBuy: '3100000000000000000000',
+     tokenSell: '0x0000000000000000000000000000000000000000',
+     sellPrecision: 18,
+     amountSell: '400000000000000000',
+     expires: 100000,
+     nonce: 1,
+     user: '0x57b080554ebafc8b17f4a6fd090c18fc8c9188a0' } }
+```
+
 ### trade
 
 Making a trade on IDEX actually involves signing a message for each order you wish to fill across and passing in an array of trades. For trades that fill a single order, the usual array with 1 object, or the object alone. The benefit of passing in multiple objects to fill across is that your action is atomic. All trades either succeed or none succeed.
@@ -449,6 +469,19 @@ Apply the salt and hash the result as usual, then sign your salted hash.
 
 NOTE: Currently, all orders being filled in a trade must be for the same tokenBuy/tokenSell pair, and must all be signed from the same address
 
+Sample output:
+
+```js
+[ { amount: ‘0.07’,
+    date: ‘2017-10-13 16:25:36’,
+    total: ‘0.01’,
+    market: ‘ETH_DVIP’,
+    type: ‘buy’,
+    price: ‘7’,
+    orderHash: ‘0xcfe4018c59e50e0e1964c979e6213ce5eb8c751cbc98a44251eb48a0985adc52’,
+    uuid: ‘250d51a0-b033-11e7-9984-a9ab79bb8f35’ } ]
+```
+
 ### cancel
 
 Cancels an order associated with the address. JSON input must include the following properties
@@ -466,6 +499,11 @@ To derive the signature for this API call, hash the following parameters in this
 2. nonce
 
 Salt and sign the hash as usual to prepare your payload
+
+Sample output:
+```js
+{ success: 1 }
+```
 
 ### withdraw
 
@@ -488,6 +526,8 @@ To derive the signature for this API call, hash the following parameters in this
 5. nonce
 
 Salt the hash as described earlier and sign it to produce your signature triplet.
+
+Useful response upon withdrawal success is in the works, for now simply test that there is no `error` property in the result object to confirm your withdrawal has succeeded.
 
 ## Direct contract calls
 
