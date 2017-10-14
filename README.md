@@ -360,7 +360,7 @@ Places a limit order on IDEX. The JSON object passed as input to this API call m
 * tokenSell (address string) - The address of the token you will lose as a result of the trade
 * amountSell (uint256) - The amount of the token you will give up when the order is fully filled
 * address (address string) - The address you are posting the order from
-* nonce (number) - One time number associated with the limit order
+* nonce (uint256) - One time number associated with the limit order
 * expires (uint256) - *DEPRECATED* this property has no effect on your limit order but is still REQUIRED to submit a limit order as it is one of the parameters that is hashed. It must be a numeric type
 * v - ...
 * r - ... 
@@ -452,7 +452,7 @@ Properties of each trade object in the trade you submit:
 
 * orderHash (256-bit hex string) - This is the unsalted hash of the order you are filling. See `raw` in the example code given with in the section that describes the `order` API call. The orderHash property of an order can be retrieved from the API calls which return orders, but for higher security we recommend you derive the hash yourself from the order parameters.
 * amount (uint256) - This is the amount of the order you are filling, the raw value not adjusted for precision *IMPORTANT: THIS PROPERTY IS IN TERMS OF THE ORDER'S amountBuy PROPERTY. This is NOT the amount of `tokenSell` you are receiving, but the amount of `tokenBuy` you are filling the order with. Do not trade unless you fully understand this idea. The amount of the token you will receive as a result of the trade is proportional to the ratio between `amountSell` and `amountBuy`*
-* nonce (number) - One time numeric value associated with the trade. *Note: if filling multiple orders in one trade, every nonce in the list of trades must be greater than the one in the previous item*
+* nonce (uint256) - One time numeric value associated with the trade. *Note: if filling multiple orders in one trade, every nonce in the list of trades must be greater than the one in the previous item*
 * address (address string) - The address you are transacting from
 * v - ...
 * r - ...
@@ -487,7 +487,7 @@ Sample output:
 Cancels an order associated with the address. JSON input must include the following properties
 
 * orderHash (256-bit hex string) - The raw hash of the order you are cancelling
-* nonce (number) - One time number associated with the address
+* nonce (uint256) - One time number associated with the address
 * address (address string) - The address you are sending the cancel from, must own the order
 * v - ...
 * r - ...
@@ -512,7 +512,7 @@ Withdraws funds associated with the address. You cannot withdraw funds that are 
 * address (address string) - The address you are transacting from
 * amount (uint256) - The raw amount you are withdrawing, not adjusted for token precision
 * token (address string) - The address of the token you are withdrawing from, see earlier notes for ETH
-* nonce (number) - One time numeric value associated with your address
+* nonce (uint256) - One time numeric value associated with your address
 * v - ...
 * r - ...
 * s - v, r, and s values obtained from signing message hash
