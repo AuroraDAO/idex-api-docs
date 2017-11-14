@@ -192,7 +192,7 @@ Possible properties of JSON input:
 * market (string) - If specified, will return an array of trade objects for the market, if omitted, will return an object of arrays of trade objects keyed by each market
 * address (address string) - If specified, return value will only include trades that involve the address as the maker or taker. Note: if specified the `type` property of the trade objects will refer to the action on the market taken relative to the user, not relative to the market. This behavior is designed to mimic the My Trades section of the IDEX appication, also to mimic the behavior of the private `returnTradeHistory` API call on Poloniex
 * start (number) - The inclusive UNIX timestamp (seconds since epoch, not ms) marking the earliest trade that will be returned in the response, if omitted will default to 0
-* end (number) - The inclusive UNIX timestamp marking the latest trade that will be returned in the restponse. If omitted will default to the current timestamp
+* end (number) - The inclusive UNIX timestamp marking the latest trade that will be returned in the response. If omitted will default to the current timestamp
 
 Sample output:
 
