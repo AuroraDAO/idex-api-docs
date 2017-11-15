@@ -418,7 +418,7 @@ const {
   v,
   r,
   s
-} = mapValues(ecsign(salted, privateKeyBuffer), (value, key) => key === 'v' ? v : bufferToHex(value));
+} = mapValues(ecsign(salted, privateKeyBuffer), (value, key) => key === 'v' ? value : bufferToHex(value));
 // send v, r, s values in payload
 ```
 
