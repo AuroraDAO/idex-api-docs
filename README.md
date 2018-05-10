@@ -201,7 +201,7 @@ Sample output:
    [ { date: '2017-10-11 21:41:15',
        amount: '0.3',
        type: 'buy',
-       total: '1',
+       total: '0.09',
        price: '0.3',
        orderHash: '0x600c405c44d30086771ac0bd9b455de08813127ff0c56017202c95df190169ae',
        uuid: 'e8719a10-aecc-11e7-9535-3b8451fd4699',
@@ -295,7 +295,7 @@ Sample output:
 [ { date: '2017-10-11 21:41:15',
     amount: '0.3',
     type: 'buy',
-    total: '1',
+    total: '0.09',
     price: '0.3',
     uuid: 'e8719a10-aecc-11e7-9535-3b8451fd4699',
     transactionHash: '0x28b945b586a5929c69337929533e04794d488c2d6e1122b7b915705d0dff8bb6' } ]
@@ -474,7 +474,7 @@ Sample output:
 ```js
 [ { amount: ‘0.07’,
     date: ‘2017-10-13 16:25:36’,
-    total: ‘0.01’,
+    total: ‘0.49’,
     market: ‘ETH_DVIP’,
     type: ‘buy’,
     price: ‘7’,
@@ -626,9 +626,9 @@ Example push messages are given below:
    { type: 'newTrade',
      data:
       { date: '2017-10-12 23:36:32',
-        amount: '4.5',
+        amount: '0.5',
         type: 'buy',
-        total: '0.5',
+        total: '4.5',
         price: '9',
         orderHash: '0x5b112c1c7089312cd92f5a701b7a4490ae2bde7054f6fd8e5790934cefd49dd1',
         uuid: '2de5db40-afa6-11e7-9b58-b5b6bfc20bff' } } }
