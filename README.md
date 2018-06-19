@@ -547,23 +547,23 @@ Example:
 
 ## WebSocket API
 
-The IDEX API offers a simple mechanism to subscribe to markets to receive push updates from the server about orderbook changes and new trades. To begin, open a WebSocket connection to wss://api.idex.market
+The IDEX API offers a simple mechanism to subscribe to markets to receive push updates from the server about orderbook changes and new trades. To begin, open a WebSocket connection to `wss://api-cluster.idex.market`
 
 All messages sent to the WebSocket server must be encoded as JSON documents. Messages sent to the server can optionally include an `id` property in the JSON payload. When the server responds it will send a message with the same `id` property if it is used.
 
 There are two messages you might want to send to the WebSocket server, a subscribe or an unsubscribe message. A subscription might be in the following form:
 
 ```js
-{ subscribe: 'ETH_DVIP' }
+{"subscribe": "ETH_DVIP"}
 ```
 The response from the server will be of the following structure:
 ```js
-{ message: { success: 'Subscribed to ETH_DVIP' } }
+{"message": {"success": "Subscribed to ETH_DVIP"}}
 ```
 
 Unsubscribing is similar:
 ```js
-{ unsubscribe: 'ETH_DVIP' }
+{"unsubscribe": "ETH_DVIP"}
 ```
 
 All messages sent from the WebSocket server will include a `message` property with the response payload. If it is a message sent as a result of a subscription, it will also contain a `topic` property with the name of the channel you are subscribed to. There are four possible payloads contained in the `message` property as a result of a subscription to a market. All payloads will have a `type` property which can be `orderBookRemove`, `orderBookAdd`, `orderBookModify`, and `newTrade` The `data` property in the `message` body will contain the event data.
@@ -635,10 +635,50 @@ Example push messages are given below:
 
 ```
 
+### Keeping Connections Alive
+
+The server closes connections after about 15 seconds of inactivity. To keep a connection open, you need to send a ping before it closes. We recommend sending a ping every 10 seconds.
+
+If you are using Javascript, you can use the following code snippet to send a ping every 10s after the connection has been opened:
+```js
+setInterval(() => socket.ping(), 10000);
+```
+
 ### WebSocket Errors
 
 An error may result if you are trying to subscribe to a channel you have already subscribed to, or unsubscribe from a channel you are not subscribed to. Simply check for an `error` property inside the `message` property of the response to properly handle errors.
- 
+
+
+### Node.js Code Sample
+
+The following code opens a connection to the API and subscribes to events for the ETH_AURA market.
+
+Note that we use the µWebSockets library (`uws`) due to its substantial performance improvements over other common WebSocket libraries for Node. See
+https://github.com/uNetworking/uWebSockets for more details. Install with `npm install uws`.
+
+```js
+const WebSocket = require('uws');
+
+const socket = new WebSocket('wss://api-cluster.idex.market');
+
+socket.on('message', message => console.log(message));
+
+socket.on('error', error => {
+  console.error('Socket error', error);
+  socket.close();
+});
+
+socket.on('open', () => {
+  setInterval(() => socket.ping(), 10000);
+
+  socket.send(JSON.stringify({ subscribe: 'ETH_AURA' }), error => {
+    if (error) {
+      console.error('Failed to send message', error);
+      socket.close();
+    }
+  });
+});
+```
 
 ## Further work
 
