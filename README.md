@@ -185,7 +185,7 @@ Sample output:
 
 ### returnTradeHistory
 
-Returns the past 200 trades for a given market, or up to 10000 trades between a range specified in UNIX timetsamps by the "start" and "end" properties of your JSON input.
+Returns the past 200 trades for a given market, or up to 5,000 trades between a range specified in UNIX timetsamps by the "start" and "end" properties of your JSON input.
 
 Possible properties of JSON input:
 
@@ -365,6 +365,23 @@ Places a limit order on IDEX. The JSON object passed as input to this API call m
 * v - ...
 * r - ... 
 * s - (v r and s are the values produced by your private key signature, see above for details)
+
+Example request body:
+
+```js
+{
+  "tokenBuy": "0xd6e8a328c5c9b6cc4c917a50ecbe0aeb663c666e",
+  "amountBuy": "1000000000000000000",
+  "tokenSell": "0x0000000000000000000000000000000000000000",
+  "amountSell": "20354156573527349",
+  "address": "0x2dbdcec64db33e673140fbd0ceef610a273b84db",
+  "nonce": 1544,
+  "expires": 100000,
+  "v": 28,
+  "r": "0xc6ddcbdf69d0e20fe879d2405b40ee417773c8a177a5d7f4461f2310565ac3d1",
+  "s": "0x497cdfedfde3308bb9d9e80ea2eabff43c7a15fef0eb164c265e3855a1bd9073"
+}
+```
 
 To produce the required signature to place a limit order, you must hash the following parameters in this order
 
