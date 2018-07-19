@@ -564,7 +564,7 @@ Example:
 
 ## WebSocket API
 
-> **IMPORTANT:** This API will be rolled out on **Thursday, July 19 around noon PST**.  This notice will be removed once the new endpoint is made available.
+> **IMPORTANT:** This API will be rolled out on **Thursday, July 19 around 2pm Pacific Time.** This notice will be removed once the new endpoint is made available.
 
 The IDEX WebSocket API offers a simple mechanism to receive push updates about order book changes and new trades.
 
