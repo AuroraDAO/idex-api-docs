@@ -564,144 +564,136 @@ Example:
 
 ## WebSocket API
 
-The IDEX API offers a simple mechanism to subscribe to markets to receive push updates from the server about orderbook changes and new trades. To begin, open a WebSocket connection to `wss://api-cluster.idex.market`
+The IDEX WebSocket API offers a simple mechanism to receive push updates about order book changes and new trades.
 
-All messages sent to the WebSocket server must be encoded as JSON documents. Messages sent to the server can optionally include an `id` property in the JSON payload. When the server responds it will send a message with the same `id` property if it is used.
+**Note that this API is under active development and that the API offered today is going to change in the near-term.** To highlight some of the upcoming changes, we will require you to subscribe to individual markets in the near future, and the data points returned for each event as well as the respective message formats are going to change. Consider the current API an experimental offering that allows you to explore the potential of future integrations.
 
-There are two messages you might want to send to the WebSocket server, a subscribe or an unsubscribe message. A subscription might be in the following form:
+### Handshake
 
-```js
-{"subscribe": "ETH_DVIP"}
-```
-The response from the server will be of the following structure:
-```js
-{"message": {"success": "Subscribed to ETH_DVIP"}}
-```
-
-Unsubscribing is similar:
-```js
-{"unsubscribe": "ETH_DVIP"}
-```
-
-All messages sent from the WebSocket server will include a `message` property with the response payload. If it is a message sent as a result of a subscription, it will also contain a `topic` property with the name of the channel you are subscribed to. There are four possible payloads contained in the `message` property as a result of a subscription to a market. All payloads will have a `type` property which can be `orderBookRemove`, `orderBookAdd`, `orderBookModify`, and `newTrade` The `data` property in the `message` body will contain the event data.
-
-Example push messages are given below:
+All connections require completion of a handshake. To begin, open a WebSocket connection to `wss://wss.idex.market`. As soon as the connection is established, send a handshake request in the form of a JSON-encoded message:
 
 ```js
-{ topic: 'ETH_DVIP',
-  message:
-   { type: 'orderBookAdd',
-     data:
-      { orderNumber: 2067,
-        orderHash: '0xd9a438e69fbefaf63c327fb8a4dcafd9b1f0faaba428e16013a15328f08c02b2',
-        price: '10',
-        amount: '1',
-        total: '10',
-        type: 'sell',
-        params:
-         { tokenBuy: '0x0000000000000000000000000000000000000000',
-           buyPrecision: 18,
-           amountBuy: '10000000000000000000',
-           tokenSell: '0xadc46ff5434910bd17b24ffb429e585223287d7f',
-           sellPrecision: 2,
-           amountSell: '100',
-           expires: 190000,
-           nonce: 2831,
-           user: '0x034767f3c519f361c5ecf46ebfc08981c629d381' } } } }
-
-{ topic: 'ETH_DVIP',
-  message:
-   { type: 'orderBookRemove',
-     data:
-      { orderHash: '0xd9a438e69fbefaf63c327fb8a4dcafd9b1f0faaba428e16013a15328f08c02b2' } } }
-
-{ topic: 'ETH_DVIP',
-  message:
-   { type: 'orderBookModify',
-     data:
-      { orderNumber: 2066,
-        orderHash: '0x5b112c1c7089312cd92f5a701b7a4490ae2bde7054f6fd8e5790934cefd49dd1',
-        price: '9',
-        amount: '0.5',
-        total: '4.5',
-        type: 'sell',
-        params:
-         { tokenBuy: '0x0000000000000000000000000000000000000000',
-           buyPrecision: 18,
-           amountBuy: '9000000000000000000',
-           amountBuyRemaining: '4500000000000000000',
-           tokenSell: '0xadc46ff5434910bd17b24ffb429e585223287d7f',
-           sellPrecision: 2,
-           amountSell: '100',
-           amountSellRemaining: '50',
-           expires: 190000,
-           nonce: 2829,
-           user: '0x034767f3c519f361c5ecf46ebfc08981c629d381' } } } }
-
-{ topic: 'ETH_DVIP',
-  message:
-   { type: 'newTrade',
-     data:
-      { date: '2017-10-12 23:36:32',
-        amount: '0.5',
-        type: 'buy',
-        total: '4.5',
-        price: '9',
-        orderHash: '0x5b112c1c7089312cd92f5a701b7a4490ae2bde7054f6fd8e5790934cefd49dd1',
-        uuid: '2de5db40-afa6-11e7-9b58-b5b6bfc20bff' } } }
-
+{
+  "method": "handshake",
+  "payload": {
+    "type": "api",
+    "version": "2.0",
+    "key": "17paIsICur8sA0OBqG6dH5G1rmrHNMwt4oNk4iX9"
+  }
+}
 ```
 
-### Keeping Connections Alive
+The server will then respond by sending a message that contains `"method": "handshake"`. You are now connected and ready to receive messages.
 
-The server closes connections after about 15 seconds of inactivity. To keep a connection open, you need to send a ping before it closes. We recommend sending a ping every 10 seconds.
+Note that the `key` property is currently a static string as shown in the example and is likely to change in the future.
 
-If you are using Javascript, you can use the following code snippet to send a ping every 10s after the connection has been opened:
-```js
-setInterval(() => socket.ping(), 10000);
-```
+### Message Types
 
-### WebSocket Errors
+All messages are sent as JSON documents and have `method` and `payload` properties.
 
-An error may result if you are trying to subscribe to a channel you have already subscribed to, or unsubscribe from a channel you are not subscribed to. Simply check for an `error` property inside the `message` property of the response to properly handle errors.
+#### New Trade
 
-
-### Node.js Code Sample
-
-The following code opens a connection to the API and subscribes to events for the ETH_AURA market.
-
-Note that we use the µWebSockets library (`uws`) due to its substantial performance improvements over other common WebSocket libraries for Node. See
-https://github.com/uNetworking/uWebSockets for more details. Install with `npm install uws`.
+May contain multiple trades.
 
 ```js
-const WebSocket = require('uws');
-
-const socket = new WebSocket('wss://api-cluster.idex.market');
-
-socket.on('message', message => console.log(message));
-
-socket.on('error', error => {
-  console.error('Socket error', error);
-  socket.close();
-});
-
-socket.on('open', () => {
-  setInterval(() => socket.ping(), 10000);
-
-  socket.send(JSON.stringify({ subscribe: 'ETH_AURA' }), error => {
-    if (error) {
-      console.error('Failed to send message', error);
-      socket.close();
+{
+  "method": "notifyTradesInserted",
+  "payload": [
+    {
+      "id": 1885452,
+      "price": "0.00001846",
+      "amountPrecision": "21216.22909795735940685",
+      "totalPrecision": "0.391651589148292854",
+      "date": "2018-07-18 22:55:15",
+      "timestamp": 1531954515,
+      "sellerFee": "0.000783303178296586",
+      "buyerFee": "21.216229097957359407",
+      "type": "sell",
+      "tokenBuy": "0xebbdf302c940c6bfd49c6b165f457fdb324649bc",
+      "amountBuy": "28375118824500956446371",
+      "tokenSell": "0x0000000000000000000000000000000000000000",
+      "amountSell": "523804693500287656",
+      "feeMake": "1000000000000000",
+      "feeTake": "4170296313232015",
+      "gasFee": "2170296313232015",
+      "buy": "0x51a6e2ca4c4cc2f86b0062e1b5000327c3e0dff4",
+      "v": 27,
+      "r": "0xc048e8a1e2b4f96a6eb3a4cfb30f5911fe6995e4aa4be89e0c368538c22c51e9",
+      "s": "0x4a72b6056cfa6def96bf8e1086ae5700f7f05d7c541845ce9c884e48e143b27d",
+      "user": "0x51a6e2ca4c4cc2f86b0062e1b5000327c3e0dff4",
+      "sell": "0x66b9dfaea3ddef53b98da82a224f70842c817703",
+      "hash": "0x997d3478478e4262fa4348781554213074a8f2e41d08820babe368f3e699789d",
+      "nonce": 6782959,
+      "amount": "21216229097957359406850",
+      "usdValue": "274.1561124038049978",
+      "gasFeeAdjusted": "0.00085",
+      "uuid": "a29f6240-8add-11e8-9e20-3198b95d073e",
+      "updatedAt": "2018-07-18T22:55:15.000Z",
+      "createdAt": "2018-07-18T22:55:15.000Z"
     }
-  });
-});
+  ]
+}
 ```
 
-## Further work
+#### New Order
 
-* Subscribe to ticker changes
-* Set your DVIP enabled rewards multiplier or fee discount
-* Trollbox access
-* Chart data
-* Retrieve info on transactions queued for dispatch
-* And much more ...
+```js
+{
+  "method": "notifyOrderInserted",
+  "payload": {
+    "complete": false,
+    "id": 36630055,
+    "tokenBuy": "0x0000000000000000000000000000000000000000",
+    "amountBuy": "422158261046066630",
+    "tokenSell": "0x423b5f62b328d0d6d44870f4eee316befa0b2df5",
+    "amountSell": "277737525277183800000",
+    "expires": 190000,
+    "nonce": 1346058,
+    "user": "0xd2c3477f7fbf39ccbc29d5fabf901557b489b27b",
+    "v": "27",
+    "r": "0x29d5d52c5ffe0803c6f94b6dde4e1e5a97d0ff3f45e8ac0bf25195ffaee23d44",
+    "s": "0x291089501f25c00e8c5c397bc2394814ad4a4c6f6773437d394386f8c1dc8e50",
+    "hash": "0x094d676543ccaf0564741b9afb43307324730281434cc7ea763d3440a7ddef1a",
+    "feeDiscount": "0",
+    "rewardsMultiple": "100",
+    "updatedAt": "2018-07-18T21:58:29.000Z",
+    "createdAt": "2018-07-18T21:58:29.000Z"
+  }
+}
+```
+
+#### Order Cancellation
+
+Cancellation of a single order:
+
+```js
+{
+  "method": "pushCancel",
+  "payload": {
+    "id": 37585076,
+    "hash": "0xab8242e6a1f4124875d61bc242f029f38038a3630eb99194c0d8bd9f65ab11d1",
+    "user": "0x4706f0844ad8b8d27b4bb2d6f6ae0c0a08cf76bd",
+    "v": 27,
+    "r": "0x6b981fb497f3ffc5fe9dc71e651635f97e0d93fdd2b1d43a8c088bbf6733d159",
+    "s": "0x4a1e0d2e11deca6430d7642802f6d0c1c3726bbde42749e8592cfa95aafb52d5",
+    "updatedAt": "2018-07-18T22:54:43.000Z",
+    "createdAt": "2018-07-18T22:54:43.000Z"
+  }
+}
+```
+
+Cancellation of multiple orders:
+
+``` js
+{
+  "method": "pushCancels",
+  "payload": [
+    {
+      "id": 37585211,
+      "hash": "0x997d3478478e4262fa4348781554213074a8f2e41d08820babe368f3e699789d",
+      "updatedAt": "2018-07-18T22:55:15.000Z",
+      "createdAt": "2018-07-18T22:55:15.000Z"
+    }
+  ]
+}
+```
