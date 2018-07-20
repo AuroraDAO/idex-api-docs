@@ -87,100 +87,103 @@ Returns the 24-hour volume for all markets, plus totals for primary currencies. 
 
 ### returnOrderBook
 
-Returns the orderbook for a given market, or returns an object of the entire orderbook keyed by market if the market parameter is omitted.
+Returns the order book for a given market.
 
-* market (string) - Market to query (omit for entire orderbook)
+* market (string) - Required. E.g. `ETH_AURA`
 
-Each market returned will have an `asks` and `bids` property containing all the sell orders and buy orders sorted by best price. Order objects will contain a `price` `amount` `total` and `orderHash` property but also a `params` property which will contain additional data about the order useful for filling or verifying it. See `trade` API call below.
+Each order book has `asks` and `bids` properties that contain all the sell and buy orders sorted by best price. Order objects will contain a `price`, `amount`, `total`, and `orderHash` properties, as well as a `params` property which contains additional data about the order - this is useful for verifying the order's authenticity and to fill it. See the `trade` API call below for details on how to fill orders.
 
-Sample output without market parameter:
+Sample response:
 
 ```js
-{ ETH_DVIP:
-   { asks:
-      [ { price: '2',
-          amount: '1',
-          total: '2',
-          orderHash: '0x6aee6591def621a435dd86eafa32dfc534d4baa38d715988d6f23f3e2f20a29a',
-          params:
-           { tokenBuy: '0x0000000000000000000000000000000000000000',
-             buySymbol: 'ETH',
-             buyPrecision: 18,
-             amountBuy: '2000000000000000000',
-             tokenSell: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
-             sellSymbol: 'DVIP',
-             sellPrecision: 8,
-             amountSell: '100000000',
-             expires: 190000,
-             nonce: 164,
-             user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } } ],
-     bids:
-      [ { price: '1',
-          amount: '2',
-          total: '2',
-          orderHash: '0x9ba97cfc6d8e0f9a72e9d26c377be6632f79eaf4d87ac52a2b3d715003b6536e',
-          params:
-           { tokenBuy: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
-             buySymbol: 'DVIP',
-             buyPrecision: 8,
-             amountBuy: '200000000',
-             tokenSell: '0x0000000000000000000000000000000000000000',
-             sellSymbol: 'ETH',
-             sellPrecision: 18,
-             amountSell: '2000000000000000000',
-             expires: 190000,
-             nonce: 151,
-             user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } } ] } }
+{
+    "asks": [
+        {
+            "price": "0.00031199",
+            "amount": "9370.06502015067623067",
+            "total": "2.923366585636809477",
+            "orderHash": "0x22a9ba7f8dd37ed24ae327b14a8a941b0eb072d60e54bcf24640c2af819fc7ec",
+            "params": {
+                "tokenBuy": "0x0000000000000000000000000000000000000000",
+                "buySymbol": "ETH",
+                "buyPrecision": 18,
+                "amountBuy": "2923366585636809477",
+                "tokenSell": "0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814",
+                "sellSymbol": "AURA",
+                "sellPrecision": 18,
+                "amountSell": "9370065020150676230670",
+                "expires": 190000,
+                "nonce": 42,
+                "user": "0xcdabe4960cb700816a9b3e287b10b7c9ce39a127"
+            }
+        },
+        ...
+    ],
+    "bids": [
+        {
+            "price": "0.000303401295904014",
+            "amount": "3131.164000000000131072",
+            "total": "0.94999921528799616",
+            "orderHash": "0xdb5d8e8f07e97cebb8b670fd8338e5db81160523e663505c5ef2c59e6a8adcec",
+            "params": {
+                "tokenBuy": "0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814",
+                "buySymbol": "AURA",
+                "buyPrecision": 18,
+                "amountBuy": "3131164000000000131072",
+                "tokenSell": "0x0000000000000000000000000000000000000000",
+                "sellSymbol": "ETH",
+                "sellPrecision": 18,
+                "amountSell": "949999215287996160",
+                "expires": 10000,
+                "nonce": 11532128096,
+                "user": "0xaac6a264554eae80fc6335cf5b7b56bcad3055b0"
+            }
+        },
+        ...
+    ]
+}
 ```
 
 ### returnOpenOrders
 
-Returns the open orders for a given market and address
+Returns the open orders for a given market or address.
 
-* address (address string) - Address to return open orders associated with
-* market (string) - String representing the market to query (example: 'ETH_DVIP')
+* address (address string) - Returns all open orders placed by this address
+* market (string) - Returns all open orders for a market. E.g. `ETH_AURA`
 
-Output is similar to the output for `returnOrderBook` except that orders are not sorted by type or price, but are rather displayed in the order of insertion. As is the case with `returnOrderBook` there is a `params` property of the response value that contains details on the order which can help with verifying its authenticity.
+Either `address` or `market` is required.
 
-Sample output:
+The response is similar to the response of `returnOrderBook` except that orders are sorted chronologically (newest first) instead of by price. The data format of an order is the same, and there are some additional data points. See the sample below.
+
+Sample response:
+
 ```js
 [
-  { orderNumber: 1412,
-    orderHash: '0xf1bbc500af8d411b0096ac62bc9b60e97024ad8b9ea170340ff0ecfa03536417',
-    price: '2.3',
-    amount: '1.2',
-    total: '2.76',
-    type: 'sell',
-    params:
-     { tokenBuy: '0x0000000000000000000000000000000000000000',
-       buySymbol: 'ETH',
-       buyPrecision: 18,
-       amountBuy: '2760000000000000000',
-       tokenSell: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
-       sellSymbol: 'DVIP',
-       sellPrecision: 8,
-       amountSell: '120000000',
-       expires: 190000,
-       nonce: 166,
-       user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } },
-  { orderNumber: 1413,
-    orderHash: '0x62748b55e1106f3f453d51f9b95282593ef5ce03c22f3235536cf63a1476d5e4',
-    price: '2.98',
-    amount: '1.2',
-    total: '3.576',
-    type: 'sell',
-    params:
-     { tokenBuy: '0x0000000000000000000000000000000000000000',
-       buySymbol: 'ETH',
-       buyPrecision: 18,
-       amountBuy: '3576000000000000000',
-       tokenSell: '0xf59fad2879fb8380ffa6049a48abf9c9959b3b5c',
-       sellSymbol: 'DVIP',
-       sellPrecision: 8,
-       amountSell: '120000000',
-       expires: 190000,
-       nonce: 168,
-       user: '0xca82b7b95604f70b3ff5c6ede797a28b11b47d63' } } ]
+    {
+        "timestamp": 1516415000,
+        "orderHash": "0x32858bf5d73f538d83893af18970ebd9bef4ace2df759d2a5ce8c9dbd5fff43f",
+        "market": "ETH_AURA",
+        "type": "sell",
+        "orderNumber": 2228127,
+        "params": {
+            "tokenBuy": "0x0000000000000000000000000000000000000000",
+            "buySymbol": "ETH",
+            "buyPrecision": 18,
+            "amountBuy": "5000000000000000000",
+            "tokenSell": "0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814",
+            "sellSymbol": "AURA",
+            "sellPrecision": 18,
+            "amountSell": "500000000000000000000",
+            "expires": 190000,
+            "nonce": 6,
+            "user": "0x2db094ffeb85cb09de753846425d4c415cb2c07a"
+        },
+        "price": "0.01",
+        "amount": "500",
+        "total": "5"
+    },
+    ...
+]
 ```
 
 ### returnTradeHistory
