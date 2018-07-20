@@ -564,8 +564,6 @@ Example:
 
 ## WebSocket API
 
-> **IMPORTANT:** This API will be rolled out on **Thursday, July 19 around 2pm Pacific Time.** This notice will be removed once the new endpoint is made available.
-
 The IDEX WebSocket API offers a simple mechanism to receive push updates about order book changes and new trades.
 
 **Note that this API is under active development and that the API offered today is going to change with the upcoming v2 API rollout.** To highlight some of the upcoming changes, we will require you to subscribe to individual markets in the near future, and the data points returned for each event as well as the respective message formats are going to change. Consider the current API an experimental offering that allows you to explore the potential of future integrations.
@@ -578,7 +576,7 @@ All connections require completion of a handshake. To begin, open a WebSocket co
 {
   "method": "handshake",
   "payload": {
-    "type": "api",
+    "type": "client",
     "version": "2.0",
     "key": "17paIsICur8sA0OBqG6dH5G1rmrHNMwt4oNk4iX9"
   }
