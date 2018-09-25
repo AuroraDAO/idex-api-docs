@@ -45,7 +45,7 @@ While everything is summarized here, you can find an [in-depth explanation in th
 
 Although the signature values are important to the contract, you shouldn't be needing them for any trade specific calculations.
 
-So if you wish to calculate trade volume in ETH, it's important to check if ETH is the buy or sell token due to its possibility of being either. And then pick out the _amount_ value from the contract (which is in units of the buying token) and calculate it into ETH terms if ETH is not the buying token.
+So if you wish to calculate trade volume in ETH, it's important to check if ETH is the buy or sell token due to its possibility of being either. And then pick out the `amount` value from the contract (which is in units of the buying token) and calculate it into ETH terms if ETH is not the buying token.
 The paraphrased code below shows what calculations are made (line 174-180):
 
 ```
@@ -58,11 +58,11 @@ tokens[tokenSell][feeAccount] += safeMul(safeMul(feeTake, amountSell), amount) /
 ```
 
 As shown above, if you would like to get the trading volume you can simply set the amount exchanged in a given trade to the amount variable from the transaction if the buying token is ETH.
-However, if the buying token is not ETH (which means the selling token is ETH instead), you will need to convert the amount to in terms of tokenSell (ETH) by performing amountSell \* ( amount / amountBuy) in order to bring amount into tokenSell terms. That result will be the total amount traded in ETH.
+However, if the buying token is not ETH (which means the selling token is ETH instead), you will need to convert the amount to in terms of `tokenSell` (ETH) by performing `amountSell` \* ( `amount` / `amountBuy`) in order to bring amount into tokenSell terms. That result will be the total amount traded in ETH.
 
 **Note:** ETH is referred to in the contract as a token with a 0x0 address, please verify the amount you're calculating is from this 0x0 address because trades in the future may be with other token as a base such as DAI or other base pairs IDEX may add.
 
-**Keep in mind:** all trade values and amounts are in pure uint256 values, meaning there is no decimal math calculated. 0.0001 ETH = 100000000000000, but 1 IDXM = 100000000. You can get a [list of tokens and their decimals from the IDEX API](https://github.com/AuroraDAO/idex-api-docs#returncurrencies).
+**Keep in mind:** all trade values and amounts are in pure `uint256` values, meaning there is no decimal math calculated. 0.0001 ETH = 100000000000000, but 1 IDXM = 100000000. You can get a [list of tokens and their decimals from the IDEX API](https://github.com/AuroraDAO/idex-api-docs#returncurrencies).
 
 Total fees can also be calculated using that info above, specifically using the additions to the fee account.
 
@@ -81,7 +81,7 @@ function depositToken(address token, uint256 amount) {
 }
 ```
 
-For `depositToken(address token, uint256 amount)`: It is specifically for ERC20 compliant token deposits. The token address and amount being deposited are passed in, added to the user balance for the token and then deposit event is emitted. Tracking the calls to this function will give you the tokens deposited.
+For `depositToken(address token, uint256 amount)`: It is specifically for ERC20 compliant token deposits. The `token` address and `amount` being deposited are passed in, added to the user balance for the token and then deposit event is emitted. Tracking the calls to this function will give you the tokens deposited.
 
 ```
 function deposit() payable {
@@ -112,8 +112,8 @@ function withdraw(address token, uint256 amount) returns (bool success) {
     Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
 }
 ```
-For _withdraw()_, it just does a simple balance check and withdraws ETH to the sender if the _token_ parameter is the 0x0 address, but if it's given an address that isn't 0x0 it assumes the address a token contract and calls the proper transfer function for it.
-**Note:** This function can only be called by the user as an escape hatch incase the main IDEX site down or disabled for an extended amount of time. It shouldn't be called nearly as often as the _adminWithdraw()_.
+For `withdraw()`, it just does a simple balance check and withdraws ETH to the sender if the _token_ parameter is the 0x0 address, but if it's given an address that isn't 0x0 it assumes the address a token contract and calls the proper transfer function for it.
+**Note:** This function can only be called by the user as an escape hatch incase the main IDEX site down or disabled for an extended amount of time. It shouldn't be called nearly as often as the `adminWithdraw()`.
 
 ```
 function adminWithdraw(address token, uint256 amount, address user, uint256 nonce, uint8 v, bytes32 r, bytes32 s, uint256 feeWithdrawal) onlyAdmin returns (bool success) {
@@ -136,21 +136,21 @@ function adminWithdraw(address token, uint256 amount, address user, uint256 nonc
 }
 ```
 
-With _adminWithdraw()_, it has a lot of parameters but the main ones you want to watch for are _token_ and _amount_ for withdraw calculations. if you would like to track the fees you can also track _feeWithdrawal_ which is taken out of the token being transferred.
+With `adminWithdraw()`, it has a lot of parameters but the main ones you want to watch for are `token` and `amount` for withdraw calculations. if you would like to track the fees you can also track `feeWithdrawal` which is taken out of the token being transferred.
 
-**Note:** Some contract transactions go back to pre-byzantium fork, so if you would like remove transactions that failed, note that _transactionStatus_ in a tx receipt is considered undefined if it is in a block from pre-byzantium.
+**Note:** Some contract transactions go back to pre-byzantium fork, so if you would like remove transactions that failed, note that `transactionStatus` in a tx receipt is considered undefined if it is in a block from pre-byzantium.
 
 ## Total Users
 
-To track total users you can get all the senders for _deposit()_ and _depositToken()_ although for getting the users making trades, which are essential to total user counts you want to actually track _tradeAddresses[2]_ and _tradeAddresses[3]_ for the _trade()_ function, and ignore all the broadcasters (in reality though there are no more than a handful of broadcasters so including them won't be a problem).
+To track total users you can get all the senders for `deposit()` and `depositToken()` although for getting the users making trades, which are essential to total user counts you want to actually track `tradeAddresses[2]` and `tradeAddresses[3]` for the `trade()` function, and ignore all the broadcasters (in reality though there are no more than a handful of broadcasters so including them won't be a problem).
 
 ```
 function trade(uint256[8] tradeValues, address[4] tradeAddresses, uint8[2] v, bytes32[4] rs) onlyAdmin returns (bool success)
 ```
 
-You also want to track the senders of _withdraw()_, and the _user_ parameter of the _adminWithdraw()_ function, any _onlyAdmin_ function has the actual user in its parameters, because it is called by the broadcasters.
+You also want to track the senders of `withdraw()`, and the `user` parameter of the `adminWithdraw()` function, any `onlyAdmin` function has the actual user in its parameters, because it is called by the broadcasters.
 
-**Note:** _adminWithdraw()_ is again, called much more than _withdraw()_, so it is very important to watch that function and the _user_ prop instead of the normal _withdraw()_ function.
+**Note:** `adminWithdraw()` is again, called much more often than `withdraw()`, so it is very important to watch that function and the `user` prop instead of the normal `withdraw()` function.
 
 ```
 function adminWithdraw(address token, uint256 amount, address user, uint256 nonce, uint8 v, bytes32 r, bytes32 s, uint256 feeWithdrawal) onlyAdmin returns (bool success)
@@ -164,7 +164,7 @@ For tracking all TXs make sure to remember any admin functions are executed by t
 
 ## Balance
 
-Balance of users on the exchange can be retrieved using _balanceOf(address token, address user)_:
+Balance of users on the exchange can be retrieved using `balanceOf(address token, address user)`:
 
 ```
 function balanceOf(address token, address user) constant returns (uint256) {
@@ -172,6 +172,6 @@ function balanceOf(address token, address user) constant returns (uint256) {
 }
 ```
 
-Through which you pass in the token address and the user you would like to see the balance of. The contract balance in its entirety can be retrieved through web3 or calling the _balanceOf()_ function from the respective tokens you want to check.
+Through which you pass in the token address and the user you would like to see the balance of. The contract balance in its entirety can be retrieved through web3 or calling the `balanceOf()` function from the respective tokens you want to check.
 
 **Note:** To get the balance of ETH that an account has in the exchange, pass in _0x0000000000000000000000000000000000000000_ as the token address.
