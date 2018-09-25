@@ -57,7 +57,7 @@ tokens[tokenSell][taker] += safeMul(safeMul(1 ether - feeTake, amountSell), amou
 tokens[tokenSell][feeAccount] += safeMul(safeMul(feeTake, amountSell), amount) / amountBuy / (1 ether));
 ```
 
-As shown above, if you would like to get the trading volume you can simply set the amount exchanged in a given trade to the amount variable from the transaction if the buying token is ETH.
+As shown above, if you would like to get the trading volume you can simply set the amount exchanged in a given trade to the amount variable from the transaction if the buying token is ETH.  
 However, if the buying token is not ETH (which means the selling token is ETH instead), you will need to convert the amount to in terms of `tokenSell` (ETH) by performing `amountSell` \* ( `amount` / `amountBuy`) in order to bring amount into tokenSell terms. That result will be the total amount traded in ETH.
 
 **Note:** ETH is referred to in the contract as a token with a 0x0 address, please verify the amount you're calculating is from this 0x0 address because trades in the future may be with other token as a base such as DAI or other base pairs IDEX may add.
@@ -112,7 +112,8 @@ function withdraw(address token, uint256 amount) returns (bool success) {
     Withdraw(token, msg.sender, amount, tokens[token][msg.sender]);
 }
 ```
-For `withdraw()`, it just does a simple balance check and withdraws ETH to the sender if the _token_ parameter is the 0x0 address, but if it's given an address that isn't 0x0 it assumes the address a token contract and calls the proper transfer function for it.
+For `withdraw()`, it just does a simple balance check and withdraws ETH to the sender if the _token_ parameter is the 0x0 address, but if it's given an address that isn't 0x0 it assumes the address a token contract and calls the proper transfer function for it.  
+
 **Note:** This function can only be called by the user as an escape hatch incase the main IDEX site down or disabled for an extended amount of time. It shouldn't be called nearly as often as the `adminWithdraw()`.
 
 ```
