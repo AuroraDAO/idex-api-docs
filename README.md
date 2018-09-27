@@ -50,7 +50,7 @@ To get data across all possible markets, use the same endpoint but omit the `mar
 
 ```js
 {
-  ETH_SAN: 
+  ETH_SAN:
    { last: '0.000981',
      high: '0.0010763',
      low: '0.0009777',
@@ -59,7 +59,7 @@ To get data across all possible markets, use the same endpoint but omit the `mar
      percentChange: '-1.83619353',
      baseVolume: '7.3922603247161',
      quoteVolume: '7462.998433' },
-  ETH_LINK: 
+  ETH_LINK:
    { last: '0.001',
      high: '0.0014',
      low: '0.001',
@@ -196,11 +196,12 @@ Possible properties of JSON input:
 * address (address string) - If specified, return value will only include trades that involve the address as the maker or taker. Note: if specified the `type` property of the trade objects will refer to the action on the market taken relative to the user, not relative to the market. This behavior is designed to mimic the My Trades section of the IDEX appication, also to mimic the behavior of the private `returnTradeHistory` API call on Poloniex
 * start (number) - The inclusive UNIX timestamp (seconds since epoch, not ms) marking the earliest trade that will be returned in the response, if omitted will default to 0
 * end (number) - The inclusive UNIX timestamp marking the latest trade that will be returned in the response. If omitted will default to the current timestamp
+* sort (string) - If specified, will change the sort order of the trades. Possible values are 'asc' and 'desc'(default). If sort is 'asc' then trades are sorted in ascending order by time of trade. If sort is 'asc' and the number of trades exceeds the limit then the oldest trades are returned first.
 
 Sample output:
 
 ```js
-{ ETH_REP: 
+{ ETH_REP:
    [ { date: '2017-10-11 21:41:15',
        amount: '0.3',
        type: 'buy',
@@ -336,7 +337,7 @@ The types of data to be hashed will always be `address`, `uint256`, or `bytes32`
 
 All hashes which are to be signed require a `nonce` parameter to derive, which must be a numeric value that increases by 1 with every message that requires a nonce. Naturally, a nonce is only associated with the address it is used from, so you can use 0 for a nonce if you were to interact with the server from a different address. If you need to find out what the next available nonce you can use in a signature is for a given address, use the `returnNextNonce` API call. A nonce must increase by 1 for every API call that requires one, i.e. you cannot use the same nonce for an order and then a withdrawal.
 
-Some hashes to be signed require the contract address as the first argument to the hash function, you can retrieve the current contract address using the `returnContractAddress` API call. 
+Some hashes to be signed require the contract address as the first argument to the hash function, you can retrieve the current contract address using the `returnContractAddress` API call.
 
 Both the `order` and `withdraw` API call require token addresses as input parameters. If you are interacting with ETH, you must supply the null address for it, i.e. 0x0000000000000000000000000000000000000000
 
@@ -366,7 +367,7 @@ Places a limit order on IDEX. The JSON object passed as input to this API call m
 * nonce (uint256) - One time number associated with the limit order
 * expires (uint256) - *DEPRECATED* this property has no effect on your limit order but is still REQUIRED to submit a limit order as it is one of the parameters that is hashed. It must be a numeric type
 * v - ...
-* r - ... 
+* r - ...
 * s - (v r and s are the values produced by your private key signature, see above for details)
 
 Example request body:
@@ -452,7 +453,7 @@ Sample output:
   amount: '3100',
   total: '0.4',
   type: 'buy',
-  params: 
+  params:
    { tokenBuy: '0x7c5a0ce9267ed19b22f8cae653f198e3e8daf098',
      buyPrecision: 18,
      amountBuy: '3100000000000000000000',
