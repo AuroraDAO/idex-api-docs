@@ -2,6 +2,93 @@
 
 This repository contains instructions on how to consume the IDEX API. The IDEX API is under active development but methods documented here will not be deprecated and are safe to build upon.
 
+---
+
+# Breaking Changes
+
+On Monday, Oct 8 at 12pm noon Pacific time breaking changes will be introduced to the IDEX API which must be accounted for within your integrations.  These changes will help provide the best possible user experience to all consumers of our API now and into the future.
+
+* Pagination will be added to the `returnOpenOrders` and `returnTradeHistory` HTTP API endpoints.
+
+* `returnOrderBook` will return a smaller number of records.
+
+Specifics about these changes are gone into detail below.
+
+> **NOTE:** This notice will be removed and the documentation for the respective endpoints will be updated when the changes are deployed.
+
+## Pagination
+
+Endpoints that use pagination accept two optional parameters that allow clients to paginate through
+a result set: A `count` parameter specifies the number of records to be returned per request, and
+a `cursor` parameter specifies the slice (or page) out of the whole result set. In general, a
+unique property of a record is used as the value of a cursor. Which property is used depends on the
+respective endpoint and is documented for each endpoint.
+
+The general pagination mechanism works as follows:
+
+`GET foo?count=2`
+
+```javascript
+[
+  {
+    "id": 1,
+    ...
+  },
+  {
+    "id": 2,
+    ...
+  }
+]
+```
+
+In order to receive the next slice (or page), use the `id` of the last record in the list (array)
+as the value for `cursor`:
+
+`GET foo?count=2&cursor=2`
+
+```javascript
+[
+  {
+    "id": 3,
+    ...
+  },
+  {
+    "id": 4,
+    ...
+  }
+]
+```
+
+For your convenience, the responses will include a new `idex-next-cursor` HTTP header that contains
+the value to be used for `cursor` to receive the next slice (or page).
+
+> Note:
+> In a future iteration of our API we plan on including a `nextCursor` property in the response
+> bodies. For now, we decided not to change the formats of the responses in order to limit the
+> impact of this change.
+
+## returnOpenOrders
+
+Responses will be paginated as described above. By default, 10 records per request will be
+returned. You may request up to 100 records per request by including the `count` parameter.
+
+The `orderNumber` property of a record is used for the cursor.
+
+## returnTradeHistory
+
+Responses will be paginated as described above. By default, 10 records per request will be
+returned. You may request up to 100 records per request by including the `count` parameter.
+
+The `tid` property of a record is used for the cursor.
+
+## returnOrderBook
+
+By default, the `asks` and `bids` arrays in the response will include 1 record each (ie. the lowest
+ask and the highest bid). You may request up to 100 records per segment by including the `count`
+parameter. Pagination is not supported.
+
+---
+
 ## HTTP API
 
 The HTTP API is available via https://api.idex.market
@@ -493,14 +580,18 @@ NOTE: Currently, all orders being filled in a trade must be for the same tokenBu
 Sample output:
 
 ```js
-[ { amount: '0.07',
-    date: '2017-10-13 16:25:36',
-    total: '0.49',
-    market: 'ETH_DVIP',
-    type: 'buy',
-    price: '7',
-    orderHash: '0xcfe4018c59e50e0e1964c979e6213ce5eb8c751cbc98a44251eb48a0985adc52',
-    uuid: '250d51a0-b033-11e7-9984-a9ab79bb8f35' } ]
+[
+  {
+    "amount": "0.07",
+    "date": "2017-10-13 16:25:36",
+    "total": "0.49",
+    "market": "ETH_DVIP",
+    "type": "buy",
+    "price": "7",
+    "orderHash": "0xcfe4018c59e50e0e1964c979e6213ce5eb8c751cbc98a44251eb48a0985adc52",
+    "uuid": "250d51a0-b033-11e7-9984-a9ab79bb8f35"
+  }
+]
 ```
 
 ### cancel
