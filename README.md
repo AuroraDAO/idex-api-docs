@@ -4,8 +4,9 @@
 
 On Monday, Oct 8 at 12pm noon Pacific time breaking changes will be introduced to the IDEX API which must be accounted for within your integrations.  These changes will help provide the best possible user experience to all consumers of our API now and into the future.
 
-* Pagination will be added to the `returnOpenOrders` and `returnTradeHistory` HTTP API endpoints.
-* `returnOrderBook` will return a smaller number of records.
+* Pagination will be added to the `returnOpenOrders` and `returnTradeHistory` HTTP API endpoints
+* The `market` parameter on the `returnTradeHistory` endpoint will be required
+* `returnOrderBook` will return a smaller number of records
 
 [Specifics about these changes are gone into detail under Breaking Changes at the bottom of this document.](#breaking-changes-1).
 
@@ -726,8 +727,9 @@ Cancellation of multiple orders:
 On Monday, Oct 8 at 12pm noon Pacific time breaking changes will be introduced to the IDEX API which must be accounted for within your integrations.
 These changes will help provide the best possible user experience to all consumers of our API now and into the future.
 
-* Pagination will be added to the `returnOpenOrders` and `returnTradeHistory` HTTP API endpoints.
-* `returnOrderBook` will return a smaller number of records.
+* Pagination will be added to the `returnOpenOrders` and `returnTradeHistory` HTTP API endpoints
+* The `market` parameter on the `returnTradeHistory` endpoint will be required
+* `returnOrderBook` will return a smaller number of records
 
 Specifics about these changes are gone into detail below.
 
@@ -792,6 +794,9 @@ returned. You may request up to 100 records per request by including the `count`
 The `orderNumber` property of a record is used for the cursor.
 
 ## returnTradeHistory
+
+The `market` parameter will be required. Omitting the `market` parameter will result in a
+400 Bad Request error response.
 
 Responses will be paginated as described above. By default, 10 records per request will be
 returned. You may request up to 100 records per request by including the `count` parameter.
