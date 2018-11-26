@@ -277,7 +277,7 @@ Sample response:
 
 Returns a single order.
 
-* `orderHash` (string) Required
+* `orderHash` (string) Required. Example `0x22a9ba7f8dd37ed24ae327b14a8a941b0eb072d60e54bcf24640c2af819fc7ec`.
 
 Sample response:
 
