@@ -13,6 +13,7 @@ Table of Contents
   - [return24Volume](#return24volume)
   - [returnOrderBook](#returnorderbook)
   - [returnOpenOrders](#returnopenorders)
+  - [returnOrderStatus](#returnorderstatus)
   - [returnTradeHistory](#returntradehistory)
   - [returnCurrencies](#returncurrencies)
   - [returnBalances](#returnbalances)
@@ -249,6 +250,8 @@ Sample response:
         "market": "ETH_AURA",
         "type": "sell",
         "orderNumber": 2228127,
+        "filled": "10000",
+        "status": "open",
         "params": {
             "tokenBuy": "0x0000000000000000000000000000000000000000",
             "buySymbol": "ETH",
@@ -268,6 +271,42 @@ Sample response:
     },
     ...
 ]
+```
+
+### returnOrderStatus
+
+Returns a single order.
+
+* `orderHash` (string)
+
+Sample response:
+
+```js
+  {
+      "timestamp": 1516415000,
+      "orderHash": "0x32858bf5d73f538d83893af18970ebd9bef4ace2df759d2a5ce8c9dbd5fff43f",
+      "market": "ETH_AURA",
+      "type": "sell",
+      "orderNumber": 2228127,
+      "filled": "10000",
+      "status": "open",
+      "params": {
+          "tokenBuy": "0x0000000000000000000000000000000000000000",
+          "buySymbol": "ETH",
+          "buyPrecision": 18,
+          "amountBuy": "5000000000000000000",
+          "tokenSell": "0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814",
+          "sellSymbol": "AURA",
+          "sellPrecision": 18,
+          "amountSell": "500000000000000000000",
+          "expires": 190000,
+          "nonce": 6,
+          "user": "0x2db094ffeb85cb09de753846425d4c415cb2c07a"
+      },
+      "price": "0.01",
+      "amount": "500",
+      "total": "5"
+  }
 ```
 
 ### returnTradeHistory
