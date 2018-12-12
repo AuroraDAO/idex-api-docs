@@ -505,7 +505,7 @@ Places a limit order on IDEX. The JSON object passed as input to this API call m
 * r - ...
 * s - (v r and s are the values produced by your private key signature, see above for details)
 
-Example request body:
+Example request body (Note that both `amountBuy` and `amountSell` fields should be converted to string):
 
 ```js
 {
@@ -624,6 +624,8 @@ To derive the hash you must sign for each order you are filling across, you must
 Apply the salt and hash the result as usual, then sign your salted hash.
 
 NOTE: Currently, all orders being filled in a trade must be for the same tokenBuy/tokenSell pair, and must all be signed from the same address
+
+Make sure to convert `amount` field to string when sending it with JSON payload.
 
 Sample output:
 
