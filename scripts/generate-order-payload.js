@@ -16,19 +16,19 @@ const idexContractAddress = '0x2a0c0dbecc7e4d658f48e01e3fa353f44050c208';
  * Your wallet's address and private key
  */
 const wallet = {
-  address: '0x5c1c99b3949fd070470d70329d20ab19e71b14c5',
+  address: '0x...',
   privateKey: '0x...',
 };
 
 /**
  * https://api.idex.market/returnNextNonce?address=...
  */
-const nonce = 6;
+const nonce = 123;
 
 const tokenBuy = '0x0000000000000000000000000000000000000000'; // ETH
 const amountBuy = '150000000000000000'; // 0.15 ETH (IDEX's minimum)
-const tokenSell = '0x0b243e93c5f4c432f74aa785cc67da2ab9357f2b'; // DIL
-const amountSell = '10000000000000000'; // 1/100th of a coin
+const tokenSell = '0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814'; // AURA
+const amountSell = '1000000000000000000000'; // 1000 coins
 
 
 const args = {

@@ -12,36 +12,35 @@ const { mapValues } = require('lodash');
  * Your wallet's address and private key
  */
 const wallet = {
-  address: '0xf542630af7e57A1CF11c3aE597249e9755630571',
+  address: '0x...',
   privateKey: '0x...',
 };
 
 /**
  * https://api.idex.market/returnNextNonce?address=...
  */
-const nonce = 35;
+const nonce = 123;
 
 /**
  * Copy and paste an order object from any of the order endpoints
  */
 const openOrder = {
-  'orderNumber': 447055,
-  'orderHash': '0xd3192d7eabfc5784af598ebe694a0bc3cbe48da57b53325fd2b2f293264845a8',
-  'timestamp': 1543970518,
-  'price': '15',
-  'amount': '0.01',
-  'total': '0.15',
-  'type': 'sell',
-  'params': {
-    'tokenBuy': '0x0000000000000000000000000000000000000000',
-    'buyPrecision': 18,
-    'amountBuy': '150000000000000000',
-    'tokenSell': '0x0b243e93c5f4c432f74aa785cc67da2ab9357f2b',
-    'sellPrecision': 18,
-    'amountSell': '10000000000000000',
-    'expires': 100000,
-    'nonce': 6,
-    'user': '0x5c1c99b3949fd070470d70329d20ab19e71b14c5',
+  price:	'0.00019293',
+  amount:	'9999.9999999999996543',
+  total:	'1.9293',
+  orderHash:	'0x...',
+  params: {
+    tokenBuy:	'0x0000000000000000000000000000000000000000',
+    buySymbol:	'ETH',
+    buyPrecision:	18,
+    amountBuy:	'1929300000000000000',
+    tokenSell:	'0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814',
+    sellSymbol:	'AURA',
+    sellPrecision:	18,
+    amountSell:	'9999999999999999654300',
+    expires:	10000,
+    nonce:	648943716,
+    user:	'0x...',
   },
 };
 

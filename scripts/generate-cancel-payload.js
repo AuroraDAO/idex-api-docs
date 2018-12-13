@@ -12,16 +12,16 @@ const { mapValues } = require('lodash');
  * Your wallet's address and private key
  */
 const wallet = {
-  address: '0x5c1c99b3949fd070470d70329d20ab19e71b14c5',
+  address: '0x...',
   privateKey: '0x...',
 };
 
 /**
- * https://idex.market/returnNextNonce?address=...
+ * https://api.idex.market/returnNextNonce?address=...
  */
-const nonce = 5;
+const nonce = 123;
 
-const orderHash = '0x0d326989c139b3ce0bb1bc3c35b4677b2236af72406c0589fe06c34b00097033';
+const orderHash = '0x...';
 
 
 const args = {
