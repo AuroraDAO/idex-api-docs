@@ -23,19 +23,6 @@ const nonce = 5;
 
 const orderHash = '0x0d326989c139b3ce0bb1bc3c35b4677b2236af72406c0589fe06c34b00097033';
 
-/**
- * Validate configuration
- */
-if (
-  !wallet.address
-  || !wallet.privateKey
-  || wallet.privateKey === '0x...'
-  || (!nonce && nonce !== 0)
-  || !orderHash
-) {
-  console.log('Invalid configuration. Please make sure all input variables are set.')
-  return;
-}
 
 const args = {
   orderHash,

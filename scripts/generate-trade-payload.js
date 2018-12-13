@@ -52,21 +52,6 @@ const openOrder = {
 const purchaseAmount = openOrder.params.amountBuy;
 // const purchaseAmount = '150000000000000000';
 
-/**
- * Validate configuration
- */
-if (
-  !wallet.address
-  || !wallet.privateKey
-  || wallet.privateKey === '0x...'
-  || (!nonce && nonce !== 0)
-  || !purchaseAmount
-  || !openOrder.orderHash
-) {
-  console.log('Invalid configuration. Please make sure all input variables are set.')
-  return;
-}
-
 
 const args = {
   orderHash: openOrder.orderHash,

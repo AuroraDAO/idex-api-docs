@@ -30,24 +30,6 @@ const amountBuy = '150000000000000000'; // 0.15 ETH (IDEX's minimum)
 const tokenSell = '0x0b243e93c5f4c432f74aa785cc67da2ab9357f2b'; // DIL
 const amountSell = '10000000000000000'; // 1/100th of a coin
 
-/**
- * Validate configuration
- */
-if (
-  !idexContractAddress
-  || !wallet.address
-  || !wallet.privateKey
-  || wallet.privateKey === '0x...'
-  || (!nonce && nonce !== 0)
-  || !tokenBuy
-  || !amountBuy
-  || !tokenSell
-  || !amountSell
-) {
-  console.log('Invalid configuration. Please make sure all input variables are set.')
-  return;
-}
-
 
 const args = {
   tokenBuy,
