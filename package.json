@@ -2,8 +2,7 @@
   "name": "idex-api-docs",
   "version": "1.0.0",
   "description": "IDEX API example scripts for creating request payloads",
-  "author": "IDEX",
-  "license": "MIT",
+  "author": "AuroraDAO IDEX",
   "dependencies": {
     "ethereumjs-util": "^6.0.0",
     "lodash": "^4.17.11",
