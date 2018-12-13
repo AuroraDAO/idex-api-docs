@@ -25,22 +25,22 @@ const nonce = 123;
  * Copy and paste an order object from any of the order endpoints
  */
 const openOrder = {
-  price:	'0.00019293',
-  amount:	'9999.9999999999996543',
-  total:	'1.9293',
-  orderHash:	'0x...',
-  params: {
-    tokenBuy:	'0x0000000000000000000000000000000000000000',
-    buySymbol:	'ETH',
-    buyPrecision:	18,
-    amountBuy:	'1929300000000000000',
-    tokenSell:	'0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814',
-    sellSymbol:	'AURA',
-    sellPrecision:	18,
-    amountSell:	'9999999999999999654300',
-    expires:	10000,
-    nonce:	648943716,
-    user:	'0x...',
+  "price": "0.00019293",
+  "amount": "9999.9999999999996543",
+  "total": "1.9293",
+  "orderHash": "0x...",
+  "params": {
+    "tokenBuy": "0x0000000000000000000000000000000000000000",
+    "buySymbol": "ETH",
+    "buyPrecision": 18,
+    "amountBuy": "1929300000000000000",
+    "tokenSell": "0xcdcfc0f66c522fd086a1b725ea3c0eeb9f9e8814",
+    "sellSymbol": "AURA",
+    "sellPrecision": 18,
+    "amountSell": "9999999999999999654300",
+    "expires": 10000,
+    "nonce": 648943716,
+    "user": "0x...",
   },
 };
 
